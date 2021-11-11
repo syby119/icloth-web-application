@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+build/
+
+external/icloth-0.3-release/
