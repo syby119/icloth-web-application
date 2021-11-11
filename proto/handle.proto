@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package web.icloth;
+
+message FixedHandle {
+    int32 clothIndex = 1;
+    int32 clothNodeIndex = 2;
+    float startFrame = 3;
+    float endFrame = 4;
+}
+
+message AttachHandle {
+    int32 clothIndex = 1;
+    int32 clothNodeIndex = 2;
+    int32 obstacleIndex = 3;
+    int32 obstacleNodeIndex = 4;
+    float startFrame = 5;
+    float endFrame = 6;
+}
+
+message GlueHandle {
+    int32 clothIndex1 = 1;
+    int32 clothNodeIndex1 = 2;
+    int32 obstacleIndex2 = 3;
+    int32 obstacleNodeIndex2 = 4;
+    float startFrame = 5;
+    float endFrame = 6;
+}
+
+message Handle {
+    oneof handle {
+        FixedHandle fixedHandle = 1;
+        AttachHandle AttachHandle = 2;
+        GlueHandle glueHandle = 3;
+    }
+}

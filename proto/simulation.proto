@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package web.icloth;
+
+import "./math.proto";
+import "./geometry.proto";
+import "./handle.proto";
+
+service SimulationService {
+    rpc prepare(PrepareRequest) returns();
+    rpc runOneStep(SimulateRequest) returns(SimulateReply);
+    rpc runMultipleSteps(stream SimulateReply) returns(stream SimulateReply);
+}
+
+message Wind {
+    web.math.Vector3f direction = 1;
+    float density = 2;
+}
+
+message Settings{
+    int32 startFrame = 1;
+    int32 endFrame = 2;
+    float timeStep = 3;
+    float gravity = 4;
+    float clothFriction = 5;
+    float obstacleFriction = 6;
+    Wind wind = 7;
+    float velScale = 8;
+    float bodyCloseEps = 9;
+    bool StrainLimiting = 10;
+}
+
+message PrepareRequest {
+    repeated web.geometry.Model obstacles = 1;
+    repeated web.geometry.Model clothes = 2;
+    repeated int32 materialIndex = 3;
+    repeated Handles handles = 4;
+    Settings settings = 5;
+}
+
+message SimulateRequest {
+    repeated Model obstacles = 1;
+}
+
+message SimulateReply {
+    repeated Model clothes = 1;
+}
