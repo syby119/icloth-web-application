@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include <glm/glm.hpp>
-#include "../base/shader.h"
+#include "shader.h"
 
 class Star {
 public:
