@@ -1,17 +1,15 @@
 #include <iostream>
 #include <cstdlib>
-#include "render_flag.h"
+#include "client.h"
 
 int main() {
 	try {
-		RenderFlag app;
+		Client app;
 		app.run();
-	}
-	catch (const std::exception& e) {
+	} catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;
 		exit(EXIT_FAILURE);
-	}
-	catch (...) {
+	} catch (...) {
 		std::cerr << "Unknown exception" << std::endl;
 		exit(EXIT_FAILURE);
 	}

@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <unordered_map>
 
@@ -88,12 +89,6 @@ Model::~Model() {
 	}
 }
 
-void Model::draw() const {
-	glBindVertexArray(_vao);
-	glDrawElements(GL_TRIANGLES, (GLsizei)_indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-}
-
 GLuint Model::getVertexArrayObject() const {
 	return _vao;
 }
@@ -104,6 +99,32 @@ size_t Model::getVertexCount() const {
 
 size_t Model::getFaceCount() const {
 	return _indices.size() / 3;
+}
+
+void Model::draw() const {
+	glBindVertexArray(_vao);
+	glDrawElements(GL_TRIANGLES, (GLsizei)_indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
+void Model::update(const std::string& filepath) {
+	update(vertices, indices);
+}
+
+void Model::update(const std::vector<Vertex>& vertices) {
+	assert(vertices.size() == _vertices.size())
+	_vertices = vertices;
+	
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * _vertices.size(), _vertices.data());
+}
+
+void Model::update(const std::vector<uint32_t>& indices) {
+	assert(indices.size() == _indices.size())
+	_indices = indices;
+	
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * _indices.size(), _indices.data());
 }
 
 void Model::initGLResources() {
