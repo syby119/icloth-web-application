@@ -38,7 +38,7 @@ public:
 
 private:
     bool colorWrite = true;
-    Side side = Side::Front;
+    RenderFace renderFace = RenderFace::Front;
     bool visible = true;
 
     bool polyOffset = false;

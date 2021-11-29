@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Face {
+enum class RenderFace {
     Front,
     Back,
     Double
