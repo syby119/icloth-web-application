@@ -1,10 +1,12 @@
 #pragma once
 
+template <typename T>
 struct Rect {
-    int x, y, width, height;
+    T x, y, width, height;
 };
 
-inline bool operator==(const Rect& lhs, const Rect& rhs) noexcept {
+template <typename T>
+inline bool operator==(const Rect<T>& lhs, const Rect<T>& rhs) noexcept {
     return lhs.x == rhs.x && 
            lhs.y == rhs.y && 
            lhs.width == rhs.width && 

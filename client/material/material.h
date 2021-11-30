@@ -13,29 +13,6 @@ public:
         Custom
     };
 
-    enum class BlendFactor {
-        Zero, 
-        One, 
-        Src, 
-        OneMinusSrc, 
-        SrcAlpha, 
-        OneMinusSrcAlpha, 
-        Dst, 
-        OneMinusDst, 
-        DstAlpha, 
-        OneMinusDstAlpha,
-        SrcAlphaSaturate
-    };
-
-    enum class BlendEquation {
-        Add, 
-        Subtract, 
-        ReverseSubtract, 
-        Min, 
-        Max
-    };
-
-
 private:
     bool colorWrite = true;
     RenderFace renderFace = RenderFace::Front;
@@ -69,7 +46,9 @@ private:
     bool blendSeparate = false;
     BlendFactor blendSrcAlphaFactor = BlendFactor::Zero;
     BlendFactor blendDstAlphaFactor = BlendFactor::One;
-    BlendEquation blendEquation = BlendEquation::Add;
+    BlendMode blendMode = BlendMode::Add;
+    bool blendAlpha = false;
+    BlendMode blendAlphaMode = BlendMode::Add;
 
     // dithering
     bool dithering = false;

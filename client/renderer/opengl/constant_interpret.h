@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../constants.h"
+#include "../../constants.h"
 
 namespace gl {
 inline GLboolean interpret(bool flag) noexcept {

@@ -3,16 +3,31 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "constant_interpret.h"
+
 namespace gl {
 class ColorBuffer {
 public:
+    ColorBuffer() {
+        glColorMask(interpret(_colorMask.r), 
+                    interpret(_colorMask.g), 
+                    interpret(_colorMask.b), 
+                    interpret(_colorMask.a));
+        glClearColor(_clearColor.r, 
+                     _clearColor.g, 
+                     _clearColor.b, 
+                     _clearColor.a);
+    }
+
+    ~ColorBuffer() = default;
+
     void setMask(glm::bvec4 colorMask) {
-        if (currentColorMask != colorMask) {
+        if (_colorMask != colorMask) {
             glColorMask(interpret(colorMask.r), 
                         interpret(colorMask.g),
                         interpret(colorMask.b),
                         interpret(colorMask.a));
-            currentColorMask = colorMask;
+            _colorMask = colorMask;
         }
     }
 
@@ -23,18 +38,20 @@ public:
             color.b *= color.a;
         }
 
-        if (currentClearColor != color) {
+        if (_clearColor != color) {
             glClearColor(color.r, color.g, color.b, color.a);
-            currentClearColor = color;
+            _clearColor = color;
         }
     }
 
     void reset() {
-        currentColorMask = glm::bvec4(false, false, false, false);
-        currentClearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        _colorMask = glm::bvec4(false, false, false, false);
+        _clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     }
-private：
-    glm::bvec4 currentColorMask = { false, false, false, false };
-    glm::vec4 currentClearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+private:
+    // glColorMask
+    glm::bvec4 _colorMask = { true, true, true, true };
+    // glClearColor
+    glm::vec4 _clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 };
 }

@@ -20,6 +20,16 @@ class State {
     StencilBuffer _stencilBuffer;
     Program* currentProgram = nullptr;
 
+    BlendMode blendMode = BlendMode::Add;
+    bool blendAlpha = false;
+    BlendMode blendAlphaMode = BlendMode::Add;
+    BlendFactor currentBlendSrcFactor = BlendFactor::SrcAlpha;
+    BlendFactor blendDstFactor = BlendFactor::OneMinusSrcAlpha;
+    bool blendSeparate = false;
+    BlendFactor blendSrcAlphaFactor = BlendFactor::Zero;
+    BlendFactor blendDstAlphaFactor = BlendFactor::One;
+    bool currentPremultipledAlpha = false;
+
     struct Texture {
         GLenum type;
         GLuint textureObject;

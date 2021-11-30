@@ -11,6 +11,28 @@ enum class FrontFace {
     CounterClockwise
 };
 
+enum class BlendMode {
+    Add, 
+    Subtract, 
+    ReverseSubtract, 
+    Min, 
+    Max
+};
+
+enum class BlendFactor {
+    Zero, 
+    One, 
+    Src, 
+    OneMinusSrc, 
+    SrcAlpha, 
+    OneMinusSrcAlpha, 
+    Dst, 
+    OneMinusDst, 
+    DstAlpha, 
+    OneMinusDstAlpha,
+    SrcAlphaSaturate
+};
+
 enum class TestFunc {
     Never,
     Less,
@@ -34,13 +56,13 @@ enum class StencilOp {
 };
 
 enum class BufferUsage {
-    StaticDrawUsage,
-    DynamicDrawUsage,
-    StreamDrawUsage,
-    StaticReadUsage,
-    DynamicReadUsage,
-    StreamReadUsage,
-    StaticCopyUsage,
-    DynamicCopyUsage,
-    StreamCopyUsage,
+    StaticDraw,
+    DynamicDraw,
+    StreamDraw,
+    StaticRead,
+    DynamicRead,
+    StreamRead,
+    StaticCopy,
+    DynamicCopy,
+    StreamCopy,
 };

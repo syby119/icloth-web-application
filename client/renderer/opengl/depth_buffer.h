@@ -3,9 +3,19 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "constant_interpret.h"
+
 namespace gl {
 class DepthBuffer {
 public:
+    DepthBuffer() {
+        glDepthMask(interpret(_depthMask));
+        glDepthFunc(interpret(_depthFunc));
+        glClearDepth(_clearDepth);
+    }
+
+    ~DepthBuffer() = default;
+
     void setTest(bool enable) {
         if (enable) {
             glEnable(GL_DEPTH_TEST);
@@ -15,27 +25,30 @@ public:
     }
 
     void setMask(bool depthMask) {
-        if (currentDepthMask != depthMask) {
+        if (_depthMask != depthMask) {
             glDepthMask(depthMask ? GL_TRUE : GL_FALSE);
-            currentDepthMask = depthMask;
+            _depthMask = depthMask;
         }
     }
 
     void setFunc(TestFunc depthFunc) {
-        if (currentDepthFunc != depthFunc) {
+        if (_depthFunc != depthFunc) {
             glDepthFunc(interpret(depthFunc));
-            currentDepthFunc = depthFunc;
+            _depthFunc = depthFunc;
         }
     }
 
     void reset() {
-        currentDepthMask = false;
-        currentDepthFunc = TestFunc::LessEqual;
-        currentClearDepth = 1.0;
+        _depthMask = false;
+        _depthFunc = TestFunc::LessEqual;
+        _clearDepth = 1.0;
     }
 private:
-    bool currentDepthMask = false;
-    TestFunc currentDepthFunc = TestFunc::LessEqual;
-    double currentClearDepth = 1.0;
+    // glDepthMask
+    bool _depthMask = false;
+    // glDepthFunc
+    TestFunc _depthFunc = TestFunc::LessEqual;
+    // glClearDepth
+    double _clearDepth = 1.0;
 };
 }
