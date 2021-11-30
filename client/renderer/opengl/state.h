@@ -15,45 +15,6 @@
 
 namespace gl {
 class State {
-    ColorBuffer _colorBuffer;
-    DepthBuffer _depthBuffer;
-    StencilBuffer _stencilBuffer;
-    Program* currentProgram = nullptr;
-
-    BlendMode blendMode = BlendMode::Add;
-    bool blendAlpha = false;
-    BlendMode blendAlphaMode = BlendMode::Add;
-    BlendFactor currentBlendSrcFactor = BlendFactor::SrcAlpha;
-    BlendFactor blendDstFactor = BlendFactor::OneMinusSrcAlpha;
-    bool blendSeparate = false;
-    BlendFactor blendSrcAlphaFactor = BlendFactor::Zero;
-    BlendFactor blendDstAlphaFactor = BlendFactor::One;
-    bool currentPremultipledAlpha = false;
-
-    struct Texture {
-        GLenum type;
-        GLuint textureObject;
-    };
-
-    unsigned int maxTextures = 0;
-
-    GLenum currentTextureSlot;
-    std::map<GLenum, Texture> currentBoundTextures;
-
-    std::map<GLenum, GLuint> emptyTextures;
-
-    Rect currentScissor = { 0, 0, 0, 0 };
-
-    Rect currentViewport = { 0, 0, 0, 0 };
-
-    currentFlipSided = ;
-    currentCullFace = ;
-    float currentLineWidth = 0.0f;
-
-  
-    float currentPolygonOffsetFactor;
-    float currentPolygonOffsetUnits;
-
 public:
     // to do
     State();
@@ -211,6 +172,45 @@ public:
         _stencilBuffer.reset();
     }
 private:
+    ColorBuffer _colorBuffer;
+    DepthBuffer _depthBuffer;
+    StencilBuffer _stencilBuffer;
+    
+    Program* currentProgram = nullptr;
+
+    BlendMode blendMode = BlendMode::Add;
+    bool blendAlpha = false;
+    BlendMode blendAlphaMode = BlendMode::Add;
+    BlendFactor currentBlendSrcFactor = BlendFactor::SrcAlpha;
+    BlendFactor blendDstFactor = BlendFactor::OneMinusSrcAlpha;
+    bool blendSeparate = false;
+    BlendFactor blendSrcAlphaFactor = BlendFactor::Zero;
+    BlendFactor blendDstAlphaFactor = BlendFactor::One;
+    bool currentPremultipledAlpha = false;
+
+    struct Texture {
+        GLenum type;
+        GLuint textureObject;
+    };
+
+    unsigned int maxTextures = 0;
+
+    GLenum currentTextureSlot;
+    std::map<GLenum, Texture> currentBoundTextures;
+
+    std::map<GLenum, GLuint> emptyTextures;
+
+    Rect<int> currentScissor = { 0, 0, 0, 0 };
+
+    Rect<int> currentViewport = { 0, 0, 0, 0 };
+
+    currentFlipSided = ;
+    currentCullFace = ;
+    float currentLineWidth = 0.0f;
+
+  
+    float currentPolygonOffsetFactor;
+    float currentPolygonOffsetUnits;
     // to do
     GLuint createEmptyTextures(GLenum textureType, void* data, int count) {
         GLuint textureObject = 0;
