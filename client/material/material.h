@@ -1,6 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include "../constants.h"
+#include "../math/uuid.h"
 
 class Material {
 public:
@@ -14,6 +17,13 @@ public:
     };
 
 private:
+    // meta data
+    const uint32_t id = ;
+    std::string name;
+    UUID uuid = generateUUID();
+    // 
+    bool fog = false;
+
     bool colorWrite = true;
     RenderFace renderFace = RenderFace::Front;
     bool visible = true;
@@ -52,6 +62,4 @@ private:
 
     // dithering
     bool dithering = false;
-
-
 };

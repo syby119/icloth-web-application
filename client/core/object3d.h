@@ -1,12 +1,14 @@
 #pragma once
 
 #include <list>
+#include <memory>
 #include <string>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 #include "../math/uuid.h"
+#include "layers.h"
 
 struct Object3D {
 public:
@@ -17,6 +19,20 @@ public:
     static constexpr glm::vec3 defaultFront { 0.0f, 0.0f, -1.0f };
     static constexpr glm::vec3 defaultUp { 0.0f, 1.0f, 0.0f };
     static constexpr glm::vec3 defaultRight { 1.0f, 0.0f, 0.0f };
+public:
+    // meta info
+    const uint32_t id;                                //< unique id starts from 0
+    std::string name;                                 //< name of the object
+    const UUID uuid = generateUUID();                 //< uuid of the object
+    // transformation
+    glm::vec3 position = { 0.0f, 0.0f, 0.0f };        //< local position
+    glm::quat rotation = { 1.0f, 0.0f, 0.0f, 0.0f };  //< local rotation in quaternion
+    glm::vec3 scale    = { 1.0f, 1.0f, 1.0f };        //< local scale
+    // scene graph relationship
+    std::shared_ptr<Objec3D*> parent = nullptr;       //< parent of this object
+    std::list<std::shared_ptr<Object3D*>> children;   //< children of this object
+    // layers
+    Layers layers;                                    //< layers
 public:
     Object3D();
 
@@ -42,25 +58,9 @@ public:
 
     glm::vec3 getUp() const;
 
-    glm::vec3 getRight() const;
-
-    glm::vec3 getPosition() const;
-
-    void setPosition(const glm::vec3& position);
-
-    glm::quat getRotation() const;
-
-    void setRotation(const glm::quat& rotation);
-
-    glm::vec3 getScale() const;
-
-    void setScale(const glm::vec3& scale);
-
     glm::mat4 getMatrix() const;
 
     glm::mat4 getWorldMatrix() const;
-
-    void updateWorldMatrix(bool recursive = true);
 
     void translate(const glm::vec3& direction, float distance);
 
@@ -96,17 +96,5 @@ public:
 
     void printInfo(bool recursive = false) const;
 private:
-    // meta info
-    const uint32_t _id;                                //< unique id starts from 0
-    std::string _name;
-    const UUID _uuid = generateUUID();
-    // transformation
-    glm::vec3 _position = { 0.0f, 0.0f, 0.0f };        //< local position
-    glm::quat _rotation = { 1.0f, 0.0f, 0.0f, 0.0f };  //< local rotation in quaternion
-    glm::vec3 _scale    = { 1.0f, 1.0f, 1.0f };        //< local scale
-    // scene graph relationship
-    Object3D* _parent   = nullptr;                     //< parent of this object
-    std::list<Object3D*> _children;                    //< children of this object
-
     void _compatibleCopy(const Object3D& rhs);
 };

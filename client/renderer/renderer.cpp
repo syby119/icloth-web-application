@@ -3,10 +3,23 @@
 Renderer::Renderer(bool antialias);
 
 void Renderer::render(const Scene& scene, const Camera& camera) {
-    
+    _projectObject(scene, camera, 0, sortObjects);
 }
 
-void Renderer::_projectObject() {
+void Renderer::_projectObject(
+    const Object3D* object, 
+    const Camera& camera,
+    uint32_t groupOrder,
+    bool enableSort) {
+    
+    // project object recursively
+    for ()
+}
+
+void Renderer::_renderBufferDirect(
+    const Camera& camera,
+    const BufferGeometry& geometry,
+    const Material& material) {
 
 }
 

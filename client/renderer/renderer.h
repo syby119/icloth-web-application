@@ -4,8 +4,10 @@
 
 #include "../math/rect.h"
 
-#include "../camera/camera.h"
+#include "../object/mesh.h"
 #include "../scene/scene.h"
+#include "../camera/camera.h"
+#include "../material/material.h"
 
 #include "opengl/state.h"
 #include "opengl/buffer_renderer.h"
@@ -123,5 +125,12 @@ private:
 
     void _initGL();
 
-    void _projectObject();
+    void _projectObject(const Object3D* object, 
+                        const Camera& camera,
+                        uint32_t groupOrder,
+                        bool enableSort);
+
+    void _renderBufferDirect(const Camera& camera,
+                             const BufferGeometry& geometry,
+                             const Material& material);
 };

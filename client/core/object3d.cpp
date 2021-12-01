@@ -86,16 +86,6 @@ glm::mat4 Object3D::getWorldMatrix() const {
     return m;
 }
 
-void Object3D::updateWorldMatrix(bool recursive) {
-    // update parents world matrix until
-    for (Object3D* p = _parent; p != nullptr; p = p->_parent) {
-        if (p->_worldMatrixNeedsUpdate) {
-            
-        }
-    }
-
-}
-
 void Object3D::translate(const glm::vec3& direction, float distance) {
     _position += direction * distance;
 }
