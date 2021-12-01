@@ -1,9 +1,10 @@
 #pragma once
 
+#include "core/object3d.h"
 #include "core/buffer_geometry.h"
 #include "material/material.h"
 
-class Mesh {
+class Mesh : public Object3D {
 public:
 
 private:

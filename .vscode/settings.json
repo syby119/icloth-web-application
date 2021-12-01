@@ -89,6 +89,8 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp"
     }
 }

@@ -91,6 +91,10 @@ public:
     bool remove(Object3D* child, bool recursive = false);
 
     bool removeFromParent();
+
+    uint32_t getDepth() const;
+
+    void printInfo(bool recursive = false) const;
 private:
     // meta info
     const uint32_t _id;                                //< unique id starts from 0

@@ -1,5 +1,6 @@
 #include <stack>
 #include <queue>
+#include <iostream>
 
 #include "object3d.h"
 
@@ -229,5 +230,73 @@ void Object3D::_compatibleCopy(const Object3D& rhs) {
     _parent = rhs._parent;
     if (_parent != nullptr) {
         _parent->add(this);
+    }
+}
+
+uint32_t Object3D::getDepth() const {
+    uint32_t depth = 0;
+    for (Object3D* p = _parent; p != nullptr; p = p->_parent) {
+        ++depth;
+    }
+
+    return depth;
+}
+
+void Object3D::printInfo(bool recursive) const {
+    auto printNode = [](const Object3D* object) {
+        auto printVec3 = [](const glm::vec3& v) {
+            std::cout << "(" << v.x  << "," << v.y << "," << v.z << ")";
+        };
+
+        auto printQuat = [](const glm::quat& q) {
+            std::cout << "(" << q.w << "," << q.x  << "," << q.y << "," << q.z << ")";
+        };
+
+        std::cout << "id:       " << object->_id << '\n';
+        std::cout << "name:     " << object->_name << '\n';
+        std::cout << "uuid:     " << uuidToHexString(object->_uuid) << '\n';
+        std::cout << "position: "; printVec3(object->_position); std::cout << '\n';
+        std::cout << "rotaion:  "; printQuat(object->_rotation); std::cout << '\n';
+        std::cout << "scale:    "; printVec3(object->_scale);    std::cout << '\n';
+
+        std::cout << "parent:   "; 
+        if (object->_parent != NULL) {
+            std::cout << object->_parent->_id << '\n';
+        } else {
+            std::cout << "NULL\n";
+        }
+
+        std::cout << "children: [";
+        bool first = true;
+        for (const auto child : object->_children) {
+            if (first) {
+                std::cout << child->_id;
+                first == false;
+            } else {
+                std::cout << ", " << child->_id;
+            }
+        }
+        std::cout << ']\n';
+    };
+
+    uint32_t depth = getDepth();
+    std::queue<const Object3D*> queue({ this });
+    uint32_t lastID = _id;
+
+    std::cout << "############### Object Info ###############\n";
+    while (!queue.empty()) {
+        const Object3D* obj = queue.front();
+        queue.pop();
+        for (const auto child : obj->_children) {
+            queue.push(child);
+        }
+
+        if (obj->_id == lastID) {
+            std::cout << "--------------- Depth " << depth++ << "---------------\n";
+            lastID = queue.back()->_id;
+        }
+
+        printNode(obj);
+        std::cout << '\n';
     }
 }
