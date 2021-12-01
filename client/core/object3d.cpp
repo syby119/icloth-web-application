@@ -9,9 +9,9 @@ static inline uint32_t generateObjectID() noexcept {
     return ++objectID;
 }
 
-Object3D::Object3D(): _id(generateObjectID()) { }
+Object3D::Object3D(): id(generateObjectID()) { }
 
-Object3D::Object3D(const Object3D& rhs): _id(generateObjectID()) {
+Object3D::Object3D(const Object3D& rhs): id(generateObjectID()) {
     _compatibleCopy(rhs);
 }
 
@@ -19,67 +19,27 @@ Object3D& Object3D::operator=(const Object3D& rhs) {
     _compatibleCopy(rhs);
 }
 
-uint32_t Object3D::getID() const {
-    return _id;
-}
-
-std::string Object3D::getName() const {
-    return _name;
-}
-
-void Object3D::setName(std::string name) {
-    _name = name;
-}
-
-UUID Object3D::getUUID() const {
-    return _uuid;
-}
-
 glm::vec3 Object3D::getFront() const {
-    return _rotation * defaultFront;
+    return rotation * defaultFront;
 }
 
 glm::vec3 Object3D::getUp() const {
-    return _rotation * defaultUp;
+    return rotation * defaultUp;
 }
 
 glm::vec3 Object3D::getRight() const {
-    return _rotation * defaultRight;
-}
-
-glm::vec3 Object3D::getPosition() const {
-    return _position;
-}
-
-void Object3D::setPosition(const glm::vec3& position) {
-    _position = position;
-}
-
-glm::quat Object3D::getRotation() const {
-    return _rotation;
-}
-
-void Object3D::setRotation(const glm::quat& rotation) {
-    _rotation = rotation;
-}
-
-glm::vec3 Object3D::getScale() const {
-    return _scale;
-}
-
-void Object3D::setScale(const glm::vec3& scale) {
-    _scale = scale;
+    return rotation * defaultRight;
 }
 
 glm::mat4 Object3D::getMatrix() const {
-    return glm::translate(glm::mat4(1.0f), _position) *
-        glm::mat4_cast(_rotation) *
-        glm::scale(glm::mat4(1.0f), _scale);
+    return glm::translate(glm::mat4(1.0f), position) *
+        glm::mat4_cast(rotation) *
+        glm::scale(glm::mat4(1.0f), scale);
 }
 
 glm::mat4 Object3D::getWorldMatrix() const {
     glm::mat4 m = getMatrix();
-    for (Object3D* p = _parent; p != nullptr; p = p->_parent) {
+    for (const Object3D* p = parent.get(); p; p = p->parent.get()) {
         m = p->getMatrix() * m;
     }
 
@@ -87,35 +47,35 @@ glm::mat4 Object3D::getWorldMatrix() const {
 }
 
 void Object3D::translate(const glm::vec3& direction, float distance) {
-    _position += direction * distance;
+    position += direction * distance;
 }
 
 void Object3D::translateX(float distance) {
-    _position.x += distance;
+    position.x += distance;
 }
 
 void Object3D::translateY(float distance) {
-    _position.y += distance;
+    position.y += distance;
 }
 
 void Object3D::translateZ(float distance) {
-    _position.z += distance;
+    position.z += distance;
 }
 
 void Object3D::rotate(const glm::vec3& axis, float angle) {
-    _rotation = glm::angleAxis(angle, axis) * _rotation;
+    rotation = glm::angleAxis(angle, axis) * rotation;
 }
 
 void Object3D::rotateX(float angle) {
-    _rotation = glm::angleAxis(angle, xAxis) * _rotation;
+    rotation = glm::angleAxis(angle, xAxis) * rotation;
 }
 
 void Object3D::rotateY(float angle) {
-    _rotation = glm::angleAxis(angle, yAxis) * _rotation;
+    rotation = glm::angleAxis(angle, yAxis) * rotation;
 }
 
 void Object3D::rotateZ(float angle) {
-    _rotation = glm::angleAxis(angle, zAxis) * _rotation;
+    rotation = glm::angleAxis(angle, zAxis) * rotation;
 }
 
 void Object3D::lookAt(const glm::vec3& worldTargetPosition) {
@@ -123,77 +83,74 @@ void Object3D::lookAt(const glm::vec3& worldTargetPosition) {
     assert(0);
 }
 
-Object3D* Object3D::getObjectById(uint32_t id) const {
-    std::stack<const Object3D*> stack({this});
-    const Object3D* target = nullptr;
-    
+std::shared_ptr<Object3D> Object3D::getObjectById(uint32_t id) const {
+    std::stack<const Object3D*> stack({ this });
+
     while (!stack.empty()) {
-        target = stack.top();
-        if (target->_id == id) {
-            break;
+        auto object = const_cast<Object3D*>(stack.top());
+        if (object->id == id) {
+            return object->shared_from_this();
         }
 
         stack.pop();
-        for (const auto child : target->_children) {
-            stack.push(child);
+        for (const auto child : object->children) {
+            stack.push(child.get());
         }
     }
     
-    return target->_id == id ? const_cast<Object3D*>(target) : nullptr;
+    return nullptr;
 }
 
-Object3D* Object3D::getObjectByName(const std::string& name) const {
+std::shared_ptr<Object3D> Object3D::getObjectByName(const std::string& name) const {
     std::queue<const Object3D*> queue({ this });
-    const Object3D* target = nullptr;
-    bool found = false;
 
     while (!queue.empty()) {
-        target = queue.front();
-        if (target->_name == name) {
-            found = true;
-            break;
+        auto object = const_cast<Object3D*>(queue.front());
+        if (object->name == name) {
+            return object->shared_from_this();
         }
 
         queue.pop();
-        for (const auto child : target->_children) {
-            queue.push(child);
+        for (const auto child : object->children) {
+            queue.push(child.get());
         }
     }
 
-    return found ? const_cast<Object3D*>(target) : nullptr;
+    return nullptr;
 }
 
-bool Object3D::add(Object3D* child) {
-    if (child == nullptr || child == this) {
+bool Object3D::add(std::shared_ptr<Object3D> child) {
+    if (!child || child.get() == this) {
         return false;
     }
 
-    if (child->_parent != nullptr) {
-        child->_parent->remove(child);
+    if (child->parent) {
+        child->parent->remove(child);
     }
 
-    child->_parent = this;
-    _children.push_back(child);
+    child->parent = shared_from_this();
+    children.push_back(child);
 
     return true;
 }
 
-bool Object3D::attach(Object3D* child) {
+bool Object3D::attach(std::shared_ptr<Object3D> child) {
     // TODO: attach the child to the current object while maintain its world position
     assert(0);
     return false;
 }
 
-bool Object3D::remove(Object3D* child, bool recursive) {
-    for (const auto c : _children) {
+bool Object3D::remove(std::shared_ptr<Object3D> child, bool recursive) {
+    for (const auto c : children) {
         if (c == child) {
-            _children.remove(child);
+            children.remove(child);
+            child->parent.reset();
             return true;
         }
     }
 
     if (recursive) {
-        for (const auto c : _children) {
+        for (const auto c : children) {
             if (remove(c, recursive)) {
                 return true;
             }
@@ -204,8 +161,8 @@ bool Object3D::remove(Object3D* child, bool recursive) {
 }
 
 bool Object3D::removeFromParent() {
-    if (_parent != nullptr) {
-        _parent->remove(this, false);
+    if (parent) {
+        parent->remove(shared_from_this(), false);
         return true;
     }
 
@@ -213,19 +170,21 @@ bool Object3D::removeFromParent() {
 }
 
 void Object3D::_compatibleCopy(const Object3D& rhs) {
-    _name = rhs._name;
-    _position = rhs._position;
-    _rotation = rhs._rotation;
-    _scale = rhs._scale;
-    _parent = rhs._parent;
-    if (_parent != nullptr) {
-        _parent->add(this);
+    name = rhs.name;
+    position = rhs.position;
+    rotation = rhs.rotation;
+    scale = rhs.scale;
+    parent = rhs.parent;
+    if (parent) {
+        parent->add(shared_from_this());
     }
+    layers = rhs.layers;
 }
 
 uint32_t Object3D::getDepth() const {
     uint32_t depth = 0;
-    for (Object3D* p = _parent; p != nullptr; p = p->_parent) {
+
+    for (const Object3D* p = parent.get(); p; p = p->parent.get()) {
         ++depth;
     }
 
@@ -242,28 +201,28 @@ void Object3D::printInfo(bool recursive) const {
             std::cout << "(" << q.w << "," << q.x  << "," << q.y << "," << q.z << ")";
         };
 
-        std::cout << "id:       " << object->_id << '\n';
-        std::cout << "name:     " << object->_name << '\n';
-        std::cout << "uuid:     " << uuidToHexString(object->_uuid) << '\n';
-        std::cout << "position: "; printVec3(object->_position); std::cout << '\n';
-        std::cout << "rotaion:  "; printQuat(object->_rotation); std::cout << '\n';
-        std::cout << "scale:    "; printVec3(object->_scale);    std::cout << '\n';
+        std::cout << "id:       " << object->id << '\n';
+        std::cout << "name:     " << object->name << '\n';
+        std::cout << "uuid:     " << uuidToHexString(object->uuid) << '\n';
+        std::cout << "position: "; printVec3(object->position); std::cout << '\n';
+        std::cout << "rotaion:  "; printQuat(object->rotation); std::cout << '\n';
+        std::cout << "scale:    "; printVec3(object->scale);    std::cout << '\n';
 
         std::cout << "parent:   "; 
-        if (object->_parent != NULL) {
-            std::cout << object->_parent->_id << '\n';
+        if (object->parent != NULL) {
+            std::cout << object->parent->id << '\n';
         } else {
             std::cout << "NULL\n";
         }
 
         std::cout << "children: [";
         bool first = true;
-        for (const auto child : object->_children) {
+        for (const auto child : object->children) {
             if (first) {
-                std::cout << child->_id;
+                std::cout << child->id;
                 first == false;
             } else {
-                std::cout << ", " << child->_id;
+                std::cout << ", " << child->id;
             }
         }
         std::cout << ']\n';
@@ -271,19 +230,19 @@ void Object3D::printInfo(bool recursive) const {
 
     uint32_t depth = getDepth();
     std::queue<const Object3D*> queue({ this });
-    uint32_t lastID = _id;
+    uint32_t lastID = id;
 
     std::cout << "############### Object Info ###############\n";
     while (!queue.empty()) {
         const Object3D* obj = queue.front();
         queue.pop();
-        for (const auto child : obj->_children) {
-            queue.push(child);
+        for (const auto child : obj->children) {
+            queue.push(child.get());
         }
 
-        if (obj->_id == lastID) {
+        if (obj->id == lastID) {
             std::cout << "--------------- Depth " << depth++ << "---------------\n";
-            lastID = queue.back()->_id;
+            lastID = queue.back()->id;
         }
 
         printNode(obj);

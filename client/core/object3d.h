@@ -10,7 +10,7 @@
 #include "../math/uuid.h"
 #include "layers.h"
 
-struct Object3D {
+struct Object3D : public std::enable_shared_from_this<Object3D> {
 public:
     static constexpr glm::vec3 xAxis { 1.0f, 0.0f, 0.0f };
     static constexpr glm::vec3 yAxis { 0.0f, 1.0f, 0.0f };
@@ -29,8 +29,8 @@ public:
     glm::quat rotation = { 1.0f, 0.0f, 0.0f, 0.0f };  //< local rotation in quaternion
     glm::vec3 scale    = { 1.0f, 1.0f, 1.0f };        //< local scale
     // scene graph relationship
-    std::shared_ptr<Objec3D*> parent = nullptr;       //< parent of this object
-    std::list<std::shared_ptr<Object3D*>> children;   //< children of this object
+    std::shared_ptr<Object3D> parent;                 //< parent of this object
+    std::list<std::shared_ptr<Object3D>> children;    //< children of this object
     // layers
     Layers layers;                                    //< layers
 public:
@@ -46,17 +46,11 @@ public:
 
     Object3D& operator=(Object3D&& rhs) noexcept = delete;
 
-    uint32_t getID() const;
-
-    std::string getName() const;
-
-    void setName(std::string name);
-
-    UUID getUUID() const;
-
     glm::vec3 getFront() const;
 
     glm::vec3 getUp() const;
+
+    glm::vec3 getRight() const;
 
     glm::mat4 getMatrix() const;
 
@@ -80,15 +74,15 @@ public:
 
     void lookAt(const glm::vec3& worldTargetPosition);
 
-    Object3D* getObjectById(uint32_t id) const;
+    std::shared_ptr<Object3D> getObjectById(uint32_t id) const;
 
-    Object3D* getObjectByName(const std::string& name) const;
+    std::shared_ptr<Object3D> getObjectByName(const std::string& name) const;
 
-    bool add(Object3D* child);
+    bool add(std::shared_ptr<Object3D> child);
 
-    bool attach(Object3D* child);
+    bool attach(std::shared_ptr<Object3D> child);
 
-    bool remove(Object3D* child, bool recursive = false);
+    bool remove(std::shared_ptr<Object3D> child, bool recursive = false);
 
     bool removeFromParent();
 
