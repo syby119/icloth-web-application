@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+namespace gl {
 class IndexedBufferRenderer {
 public:
     void setMode(GLenum mode) {
@@ -22,3 +23,4 @@ private:
     GLenum _indexType = GL_UNSIGNED_INT;
     int _bytePerIndex = sizeof(unsigned int);
 };
+}

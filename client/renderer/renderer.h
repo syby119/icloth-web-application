@@ -4,10 +4,14 @@
 
 #include "../math/rect.h"
 
-#include "camera/camera.h"
-#include "scene/scene.h"
+#include "../camera/camera.h"
+#include "../scene/scene.h"
+
+#include "opengl/state.h"
+#include "opengl/buffer_renderer.h"
+#include "opengl/indexed_buffer_renderer.h"
+
 #include "render_target.h"
-#include "state.h"
 
 enum class RenderMode {
     Point,
@@ -114,6 +118,8 @@ private:
     // const _projScreenMatrix = new Matrix4();
 private:
     gl::State _state;
+    gl::BufferRenderer _bufferRenderer;
+    gl::IndexedBufferRenderer _indexBufferRenderer;
 
     void _initGL();
 

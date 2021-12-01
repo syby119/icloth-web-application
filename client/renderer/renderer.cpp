@@ -2,9 +2,13 @@
 
 Renderer::Renderer(bool antialias);
 
-void Renderer::render(const Scene& scene, const Camera& camera);
+void Renderer::render(const Scene& scene, const Camera& camera) {
+    
+}
 
-void Renderer::_projectObject();
+void Renderer::_projectObject() {
+
+}
 
 void Renderer::clear(bool color, bool depth, bool stencil) {
     GLbitfield mask = 0;

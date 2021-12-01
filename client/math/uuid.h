@@ -10,4 +10,4 @@ UUID generateUUID();
 
 bool operator==(const UUID& lhs, const UUID& rhs) noexcept;
 
-inline std::string uuidToHexString(const UUID& uuid, char delim = '-');
+std::string uuidToHexString(const UUID& uuid, char delim = '-');

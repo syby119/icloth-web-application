@@ -1,56 +1,108 @@
 #pragma once
 
 #include <list>
+#include <string>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "../math/uuid.h"
+
 struct Object3D {
 public:
-	static constexpr glm::vec3 xAxis { 1.0f, 0.0f, 0.0f };
-	static constexpr glm::vec3 yAxis { 0.0f, 1.0f, 0.0f };
-	static constexpr glm::vec3 zAxis { 0.0f, 0.0f, 1.0f };
+    static constexpr glm::vec3 xAxis { 1.0f, 0.0f, 0.0f };
+    static constexpr glm::vec3 yAxis { 0.0f, 1.0f, 0.0f };
+    static constexpr glm::vec3 zAxis { 0.0f, 0.0f, 1.0f };
 
-	static constexpr glm::vec3 defaultFront { 0.0f, 0.0f, -1.0f };
-	static constexpr glm::vec3 defaultUp { 0.0f, 1.0f, 0.0f };
-	static constexpr glm::vec3 defaultRight { 1.0f, 0.0f, 0.0f };
+    static constexpr glm::vec3 defaultFront { 0.0f, 0.0f, -1.0f };
+    static constexpr glm::vec3 defaultUp { 0.0f, 1.0f, 0.0f };
+    static constexpr glm::vec3 defaultRight { 1.0f, 0.0f, 0.0f };
 public:
-	glm::vec3 position = { 0.0f, 0.0f, 0.0f };        //< local position
-	glm::quat rotation = { 1.0f, 0.0f, 0.0f, 0.0f };  //< local rotation in quaternion
-	glm::vec3 scale    = { 1.0f, 1.0f, 1.0f };        //< local scale
+    Object3D();
 
-	Object3D* parent   = nullptr;                     //< parent of this object
-	std::list<Object3D*> children;                    //< children of this object
+    Object3D(const Object3D& rhs);
 
-	glm::vec3 getFront() const;
+    Object3D(Object3D&& rhs) noexcept = delete;
 
-	glm::vec3 getUp() const;
+    ~Object3D() = default;
 
-	glm::vec3 getRight() const;
+    Object3D& operator=(const Object3D& rhs);
 
-	glm::mat4 getMatrix() const;
+    Object3D& operator=(Object3D&& rhs) noexcept = delete;
 
-	glm::mat4 getWorldMatrix() const;
+    uint32_t getID() const;
 
-	void translate(const glm::vec3& direction, float distance);
+    std::string getName() const;
 
-	void translateX(float distance);
+    void setName(std::string name);
 
-	void translateY(float distance);
+    UUID getUUID() const;
 
-	void translateZ(float distance);
+    glm::vec3 getFront() const;
 
-	void rotate(const glm::vec3& axis, float angle);
+    glm::vec3 getUp() const;
 
-	void rotateX(float angle);
+    glm::vec3 getRight() const;
 
-	void rotateY(float angle);
+    glm::vec3 getPosition() const;
 
-	void rotateZ(float angle);
+    void setPosition(const glm::vec3& position);
 
-	void lookAt(glm::vec3 worldTargetPosition);
+    glm::quat getRotation() const;
 
-	bool add(Object3D* child);
+    void setRotation(const glm::quat& rotation);
 
-	bool remove(Object3D* child, bool recursive = false);
+    glm::vec3 getScale() const;
+
+    void setScale(const glm::vec3& scale);
+
+    glm::mat4 getMatrix() const;
+
+    glm::mat4 getWorldMatrix() const;
+
+    void updateWorldMatrix(bool recursive = true);
+
+    void translate(const glm::vec3& direction, float distance);
+
+    void translateX(float distance);
+
+    void translateY(float distance);
+
+    void translateZ(float distance);
+
+    void rotate(const glm::vec3& axis, float angle);
+
+    void rotateX(float angle);
+
+    void rotateY(float angle);
+
+    void rotateZ(float angle);
+
+    void lookAt(const glm::vec3& worldTargetPosition);
+
+    Object3D* getObjectById(uint32_t id) const;
+
+    Object3D* getObjectByName(const std::string& name) const;
+
+    bool add(Object3D* child);
+
+    bool attach(Object3D* child);
+
+    bool remove(Object3D* child, bool recursive = false);
+
+    bool removeFromParent();
+private:
+    // meta info
+    const uint32_t _id;                                //< unique id starts from 0
+    std::string _name;
+    const UUID _uuid = generateUUID();
+    // transformation
+    glm::vec3 _position = { 0.0f, 0.0f, 0.0f };        //< local position
+    glm::quat _rotation = { 1.0f, 0.0f, 0.0f, 0.0f };  //< local rotation in quaternion
+    glm::vec3 _scale    = { 1.0f, 1.0f, 1.0f };        //< local scale
+    // scene graph relationship
+    Object3D* _parent   = nullptr;                     //< parent of this object
+    std::list<Object3D*> _children;                    //< children of this object
+
+    void _compatibleCopy(const Object3D& rhs);
 };
