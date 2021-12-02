@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <glm/glm.hpp>
 
 #include "../math/rect.h"
@@ -10,19 +12,11 @@
 #include "../material/material.h"
 
 #include "opengl/state.h"
+#include "opengl/attribute_manager.h"
 #include "opengl/buffer_renderer.h"
 #include "opengl/indexed_buffer_renderer.h"
 
 #include "render_target.h"
-
-enum class RenderMode {
-    Point,
-    Line,
-    LineStrip,
-    Triangle,
-    TriangleStrip,
-    TriangleFan
-};
 
 class Renderer {
 public:
@@ -98,6 +92,8 @@ private:
     // let _opaqueSort = null;
     // let _transparentSort = null;
 
+    AttributeManager _attributeMgr;
+
     int _width, _height;
     float _pixelRatio = 1.0f;
 
@@ -125,8 +121,8 @@ private:
 
     void _initGL();
 
-    void _projectObject(const Object3D* object, 
-                        const Camera& camera,
+    void _projectObject(std::shared_ptr<Object3D> object, 
+                        std::shared_ptr<Camera> camera,
                         uint32_t groupOrder,
                         bool enableSort);
 

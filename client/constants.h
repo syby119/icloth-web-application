@@ -1,5 +1,17 @@
 #pragma once
 
+enum class DataType {
+    Byte,
+    UnsignedByte,
+    Short,
+    UnsignedShort,
+    Int,
+    UnsignedInt,
+    HalfFloat,
+    Float,
+    Double
+};
+
 enum class RenderFace {
     Front,
     Back,
@@ -65,4 +77,13 @@ enum class BufferUsage {
     StaticCopy,
     DynamicCopy,
     StreamCopy,
+};
+
+enum class RenderMode {
+    Point,
+    Line,
+    LineStrip,
+    Triangles,
+    TriangleStrip,
+    TriangleFan
 };

@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include "../constants.h"
 #include "../math/uuid.h"
 #include "layers.h"
 
@@ -31,7 +32,11 @@ public:
     // scene graph relationship
     std::shared_ptr<Object3D> parent;                 //< parent of this object
     std::list<std::shared_ptr<Object3D>> children;    //< children of this object
-    // layers
+    // render related
+    RenderMode renderMode = RenderMode::Triangles;    //< render mode of the object
+    uint32_t renderOrder = 0;                         //< render order of the objcet
+    uint32_t visible = true;                          //< visibility
+    bool frustumCulled = false;                       //< enable frustrum culling
     Layers layers;                                    //< layers
 public:
     Object3D();
@@ -40,7 +45,7 @@ public:
 
     Object3D(Object3D&& rhs) noexcept = delete;
 
-    ~Object3D() = default;
+    virtual ~Object3D() = default;
 
     Object3D& operator=(const Object3D& rhs);
 

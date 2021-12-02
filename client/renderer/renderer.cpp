@@ -7,10 +7,35 @@ void Renderer::render(const Scene& scene, const Camera& camera) {
 }
 
 void Renderer::_projectObject(
-    const Object3D* object, 
-    const Camera& camera,
+    std::shared_ptr<Object3D> object, 
+    std::shared_ptr<Camera> camera,
     uint32_t groupOrder,
     bool enableSort) {
+    if (object->visible == false) {
+        return;
+    }
+    
+    const bool visibleByCamera = camera->layers.test(object->layers);
+    if (visibleByCamera) {
+
+        // mesh instance
+        auto mesh = std::dynamic_pointer_cast<Mesh>(object);
+        if (mesh) {
+            if (!mesh->frustumCulled && ) {
+                glm::vec3 viewSpacePosition;
+                if (sortObjects) {
+                    viewSpacePosition = ;
+                }
+
+                if (mesh->materials.size() > 1) {
+                    
+                } else {
+                    
+                }
+            }
+        }
+
+    }
     
     // project object recursively
     for ()
