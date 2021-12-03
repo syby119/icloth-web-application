@@ -4,6 +4,18 @@ Renderer::Renderer(bool antialias);
 
 void Renderer::render(const Scene& scene, const Camera& camera) {
     _projectObject(scene, camera, 0, sortObjects);
+
+    //....
+
+
+    renderScene();
+
+    _state.depthBuffer.setTest(true);
+    _state.depthBuffer.setMask(true);
+    _state.colorBuffer.setMask(true);
+    _state.setPolygonOffset(false);
+
+
 }
 
 void Renderer::_projectObject(
@@ -40,6 +52,19 @@ void Renderer::_projectObject(
     // project object recursively
     for ()
 }
+
+void Renderer::_renderScene() {
+    _
+}
+
+void Renderer::_renderObjects() {
+    for ()
+}
+
+void Renderer::_renderObject() {
+
+}
+
 
 void Renderer::_renderBufferDirect(
     const Camera& camera,

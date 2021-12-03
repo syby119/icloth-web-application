@@ -12,6 +12,7 @@
 #include "../material/material.h"
 
 #include "opengl/state.h"
+#include "opengl/capability.h"
 #include "opengl/attribute_manager.h"
 #include "opengl/buffer_renderer.h"
 #include "opengl/indexed_buffer_renderer.h"
@@ -69,7 +70,7 @@ public:
     // void setClearColor();
 
 private:
-
+    Capability capability;
 
     // let _currentActiveCubeFace = 0;
     // let _currentActiveMipmapLevel = 0;
@@ -92,7 +93,7 @@ private:
     // let _opaqueSort = null;
     // let _transparentSort = null;
 
-    AttributeManager _attributeMgr;
+    gl::AttributeManager _attributeMgr;
 
     int _width, _height;
     float _pixelRatio = 1.0f;
@@ -125,6 +126,12 @@ private:
                         std::shared_ptr<Camera> camera,
                         uint32_t groupOrder,
                         bool enableSort);
+
+    void _renderScene();
+
+    void _renderObjects();
+
+    void _renderObject();
 
     void _renderBufferDirect(const Camera& camera,
                              const BufferGeometry& geometry,

@@ -11,7 +11,6 @@
 #include "color_buffer.h"
 #include "depth_buffer.h"
 #include "stencil_buffer.h"
-#include "program.h"
 
 namespace gl {
 class State {
@@ -21,11 +20,6 @@ public:
 
     void activeTexture(GLenum slot = 0);
 
-   /**
-    * @brief bind texture
-    * @param textureType gl.TEXTURE_2D, gl.TEXTURE_CUBE_MAP, gl.TEXTURE_3D or gl.TEXTURE_2D_ARRAY
-    * @param textureObject  texture handle
-    */
     void bindTexture(GLenum textureType, GLuint textureObject) {
         if (currentTextureSlot) {
             activeTexture();
@@ -48,7 +42,7 @@ public:
         glTexImage2D();
     }
 
-    bool useProgram(const Program* program) {
+    bool useProgram() {
         if (currentProgram != program) {
             program->use();
             currentProgram = program;
@@ -65,7 +59,7 @@ public:
         }
     }
 
-    void setPolygonOffset(bool enable, float factor, float units) {
+    void setPolygonOffset(bool enable, float factor = 0.0f, float units = 0.0f) {
         if (enable) {
             glEnable(GL_POLYGON_OFFSET_FILL);
             if (currentPolygonOffsetFactor != factor || 
@@ -167,16 +161,16 @@ public:
 
         currentProgram = nullptr;
 
-        _colorBuffer.reset();
-        _depthBuffer.reset();
-        _stencilBuffer.reset();
+        colorBuffer.reset();
+        depthBuffer.reset();
+        stencilBuffer.reset();
     }
-private:
-    ColorBuffer _colorBuffer;
-    DepthBuffer _depthBuffer;
-    StencilBuffer _stencilBuffer;
-    
-    Program* currentProgram = nullptr;
+public:
+    ColorBuffer colorBuffer;
+    DepthBuffer depthBuffer;
+    StencilBuffer stencilBuffer;
+private: 
+    GLuint currentProgram = 0;
 
     BlendMode blendMode = BlendMode::Add;
     bool blendAlpha = false;

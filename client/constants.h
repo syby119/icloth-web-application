@@ -18,7 +18,7 @@ enum class RenderFace {
     Double
 };
 
-enum class FrontFace {
+enum class FrontFaceDirection {
     Clockwise,
     CounterClockwise
 };

@@ -21,6 +21,10 @@ public:
 
     ~ColorBuffer() = default;
 
+    void setMask(bool mask) {
+        setMask(glm::bvec4(mask));
+    }
+
     void setMask(glm::bvec4 colorMask) {
         if (_colorMask != colorMask) {
             glColorMask(interpret(colorMask.r), 
