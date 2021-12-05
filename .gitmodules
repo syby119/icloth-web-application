@@ -10,6 +10,3 @@
 [submodule "external/imgui"]
 	path = external/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "external/grpc"]
-	path = external/grpc
-	url = https://github.com/grpc/grpc
