@@ -13,6 +13,3 @@
 [submodule "external/grpc"]
 	path = external/grpc
 	url = https://github.com/grpc/grpc
-[submodule "external/assimp"]
-	path = external/assimp
-	url = https://github.com/assimp/assimp.git
