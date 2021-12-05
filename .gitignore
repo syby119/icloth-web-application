@@ -33,4 +33,6 @@
 
 build/
 
+.vscode/
+
 external/icloth-0.3-release/

@@ -5,7 +5,13 @@
 
 namespace gl {
 class TextureManager {
-function WebGLTextures(extensions, state, properties, capabilities, utils) {
+	private:
+		extensions;
+		state;
+		properties;
+		capabilities;
+		utils;
+	public:
 		const MultisampledRenderToTextureExtension = extensions.get('WEBGL_multisampled_render_to_texture');
 
 		bool textureNeedsGenerateMipmaps(texture, supportsMips) {

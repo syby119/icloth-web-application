@@ -18,14 +18,14 @@ public:
 
 private:
     // meta data
-    const uint32_t id = ;
+    const uint32_t id = generateID();
     std::string name;
     UUID uuid = generateUUID();
     // 
     bool fog = false;
 
     bool colorWrite = true;
-    RenderFace renderFace = RenderFace::Front;
+    RenderSide renderSide = RenderSide::Front;
     bool visible = true;
 
     bool polyOffset = false;
@@ -62,4 +62,9 @@ private:
 
     // dithering
     bool dithering = false;
+
+    static inline uint32_t generateID() noexcept {
+        static uint32_t gid = 0;
+        return ++gid;
+    };
 };

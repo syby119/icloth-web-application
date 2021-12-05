@@ -12,7 +12,7 @@ enum class DataType {
     Double
 };
 
-enum class RenderFace {
+enum class RenderSide {
     Front,
     Back,
     Double
