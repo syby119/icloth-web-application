@@ -5,7 +5,7 @@ set(ASSIMP_GIT_TAG      v5.1.3)
 set(ASSIMP_GIT_URL      https://github.com/assimp/assimp.git)
 set(ASSIMP_CONFIGURE    cd ${ASSIMP_ROOT}/src/assimp && cmake -D CMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/assimp .)
 set(ASSIMP_MAKE         cd ${ASSIMP_ROOT}/src/assimp && cmake --build . --config Release)
-set(ASSIMP_INSTALL      cd ${CMAKE_BINARY_DIR}/src/assimp && cmake --install . --config Release)
+set(ASSIMP_INSTALL      cd ${ASSIMP_ROOT}/src/assimp && cmake --install . --config Release)
 
 ExternalProject_Add(
     assimp

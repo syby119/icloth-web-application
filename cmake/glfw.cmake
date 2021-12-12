@@ -1,11 +1,11 @@
 include(ExternalProject)
 
 set(GLFW_ROOT       ${CMAKE_SOURCE_DIR}/external/glfw)
-set(GLFW_GIT_TAG    v3.3.5)
+set(GLFW_GIT_TAG    3.3.5)
 set(GLFW_GIT_URL    https://github.com/glfw/glfw.git)
 set(GLFW_CONFIGURE  cd ${GLFW_ROOT}/src/glfw && cmake -D CMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/glfw .)
 set(GLFW_MAKE       cd ${GLFW_ROOT}/src/glfw && cmake --build . --config Release)
-set(GLFW_INSTALL    cd ${CMAKE_BINARY_DIR}/src/glfw && cmake --install . --config Release)
+set(GLFW_INSTALL    cd ${GLFW_ROOT}/src/glfw && cmake --install . --config Release)
 
 ExternalProject_Add(
     glfw

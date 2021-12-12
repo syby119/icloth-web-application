@@ -87,4 +87,4 @@ add_executable(client ${PROJECT_SRC}
                       ${STB_SRC})
 
 # target_link_libraries(client glm glfw assimp /*grpc++*/)
-target_link_libraries(client assimp glad glfw glm)
+# target_link_libraries(client assimp glad glfw glm)
