@@ -36,3 +36,9 @@ build/
 .vscode/
 
 external/icloth-0.3-release/
+
+external/assimp/
+
+external/glfw/
+
+external/grpc/

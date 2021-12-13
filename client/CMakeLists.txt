@@ -10,16 +10,7 @@ function(DebugPrint results)
     message(STATUS "####################################")
 endfunction(DebugPrint)
 
-# include path
 set(THIRD_PARTY_LIBRARY_PATH ${CMAKE_SOURCE_DIR}/external)
-include_directories(${THIRD_PARTY_LIBRARY_PATH}/assimp
-                    ${THIRD_PARTY_LIBRARY_PATH}/glad/include
-                    ${THIRD_PARTY_LIBRARY_PATH}/glfw/include
-                    ${THIRD_PARTY_LIBRARY_PATH}/glm
-                    ${THIRD_PARTY_LIBRARY_PATH}/grpc/include
-                    ${THIRD_PARTY_LIBRARY_PATH}/imgui
-                    ${THIRD_PARTY_LIBRARY_PATH}/imgui/backends
-                    ${THIRD_PARTY_LIBRARY_PATH}/stb)
 
 # glad
 file(GLOB GLAD_SRC "${THIRD_PARTY_LIBRARY_PATH}/glad/src/*.c")
@@ -79,12 +70,26 @@ set(BASE_SRC ${CAMERA_SRC}
 # project
 file(GLOB PROJECT_SRC "*.cpp" "*.h")
 
-add_executable(client ${PROJECT_SRC}
-                      ${BASE_SRC}
-                      ${GLAD_SRC}
-                      ${IMGUI_SRC}
-                      ${IMGUI_BACKEND_SRC}
-                      ${STB_SRC})
+add_executable(
+    client 
+    ${PROJECT_SRC}
+    ${BASE_SRC}
+    ${GLAD_SRC}
+    ${IMGUI_SRC}
+    ${IMGUI_BACKEND_SRC}
+    ${STB_SRC})
+
+# include path
+target_include_directories(
+    client PUBLIC
+    ${THIRD_PARTY_LIBRARY_PATH}/assimp/include
+    ${THIRD_PARTY_LIBRARY_PATH}/grpc/include
+    ${THIRD_PARTY_LIBRARY_PATH}/glfw/include
+    ${THIRD_PARTY_LIBRARY_PATH}/glad/include
+    ${THIRD_PARTY_LIBRARY_PATH}/glm
+    ${THIRD_PARTY_LIBRARY_PATH}/imgui
+    ${THIRD_PARTY_LIBRARY_PATH}/imgui/backends
+    ${THIRD_PARTY_LIBRARY_PATH}/stb)
 
 # target_link_libraries(client glm glfw assimp /*grpc++*/)
 # target_link_libraries(client assimp glad glfw glm)

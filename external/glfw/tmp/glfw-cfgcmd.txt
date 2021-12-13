@@ -1,1 +1,0 @@
-cmd='cd;D:/github/icloth-web-application/external/glfw/src/glfw;&&;cmake;-D;CMAKE_INSTALL_PREFIX=D:/github/icloth-web-application/build/external/glfw;.'

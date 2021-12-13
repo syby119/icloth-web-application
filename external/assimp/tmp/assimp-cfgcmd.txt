@@ -1,1 +1,0 @@
-cmd='cd;D:/github/icloth-web-application/external/assimp/src/assimp;&&;cmake;-D;CMAKE_INSTALL_PREFIX=D:/github/icloth-web-application/build/external/assimp;.'
